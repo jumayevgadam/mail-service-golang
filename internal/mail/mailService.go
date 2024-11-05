@@ -4,8 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 
 	"github.com/jumayevgadam/go-mail-service/internal/model"
 	"gopkg.in/gomail.v2"
@@ -13,28 +11,15 @@ import (
 
 // SendMail sends an email to the user
 func SendMail(userData model.UserData) error {
-	// Define SMTP configuration
-	smtpHost := os.Getenv("SMTP_HOST")
-	smtpPort := os.Getenv("SMTP_PORT")
-	smtpUser := os.Getenv("SMTP_USER")
-	smtpPass := os.Getenv("SMTP_PASS")
-
 	// Create a new message
 	m := gomail.NewMessage()
 	m.SetHeader("From", "hypergadam@gmail.com")
 	m.SetHeader("To", userData.Email)
 	m.SetHeader("Subject", "Thank you for interest!")
 	m.SetBody("text/html", generateHTMLMessage(userData.FullName))
-	m.Attach("https://ramsesramva.com/pdf/ramsesramva_cv.pdf")
+	m.Attach("./attach.txt")
 
-	// Set up the STMP dialer
-	port, err := strconv.Atoi(smtpPort)
-	if err != nil {
-		log.Fatalf("invalid SMTP port: %v", err.Error())
-		return err
-	}
-
-	d := gomail.NewDialer(smtpHost, port, smtpUser, smtpPass)
+	d := gomail.NewDialer("smtp.gmail.com", 587, "hypergadam@gmail.com", "zmkzqrsnxhkvqppt")
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	// Send the email

@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"os"
-
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/log"
 )
@@ -14,7 +12,7 @@ func OriginMiddleware() fiber.Handler {
 		// Get the origin header
 		requestOrigin := c.Get("Origin")
 		// Check if the origin is allowed
-		if requestOrigin == os.Getenv("ALLOWED_ORIGIN") {
+		if requestOrigin == "*" {
 			// Allow the request to continue
 			return c.Next()
 		}

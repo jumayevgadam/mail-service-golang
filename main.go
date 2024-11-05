@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/log"
 	"github.com/gofiber/fiber/v3/middleware/cors"
@@ -24,7 +21,7 @@ func main() {
 	app := fiber.New()
 	// Setting up CORS middleware
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{os.Getenv("ALLOWED_ORIGIN")},
+		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"POST"},
 		AllowHeaders: []string{"Origin", "Content-Type"},
 	}))
@@ -37,6 +34,6 @@ func main() {
 	validator.SetUpValidation()
 
 	// Starting the server
-	log.Infof("Server is running on http http://%s:%d", os.Getenv("HOST"), os.Getenv("PORT"))
-	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))
+	log.Infof("Server is running on http http://localhost:4000")
+	app.Listen(":4000")
 }
