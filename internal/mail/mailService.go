@@ -12,55 +12,24 @@ import (
 // SendMail sends an email to the user
 func SendMail(userData model.UserData) error {
 	// Create a new message
-	m := gomail.NewMessage()
-	m.SetHeader("From", "hypergadam@gmail.com")
-	m.SetHeader("To", userData.Email)
-	m.SetHeader("Subject", "Thank you for interest!")
-	m.SetBody("text/html", generateHTMLMessage(userData.FullName))
-	m.Attach("./attach.txt")
+	for _, mail := range userData.Email {
+		m := gomail.NewMessage()
+		m.SetHeader("From", "hypergadam@gmail.com")
 
-	d := gomail.NewDialer("smtp.gmail.com", 587, "hypergadam@gmail.com", "zmkzqrsnxhkvqppt")
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		m.SetHeader("To", mail)
 
-	// Send the email
-	if err := d.DialAndSend(m); err != nil {
-		return fmt.Errorf("error sending mail: %w", err)
+		m.SetHeader("Subject", userData.Subject)
+		m.SetBody("text/html", userData.Message)
+
+		d := gomail.NewDialer("smtp.gmail.com", 587, "hypergadam@gmail.com", "zmkzqrsnxhkvqppt")
+		d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+		// Send the email
+		if err := d.DialAndSend(m); err != nil {
+			return fmt.Errorf("error sending mail: %w", err)
+		}
 	}
 
 	log.Println("Email sent successfully!!")
 	return nil
-}
-
-// generateHTMLMessage generates an HTML message for the email
-func generateHTMLMessage(recipientName string) string {
-	return fmt.Sprintf(
-		`<!DOCTYPE html>
-    <html>
-    <head>
-        <title>Email</title>
-    </head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f9f9f9;">
-        <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-            <h1 style="font-size: 24px; font-weight: bold; color: #444;">Dear %s,</h1>
-            <p style="margin: 15px 0;">
-                I wanted to take a moment to express my sincere gratitude for your interest in my web portfolio. 
-                I am truly excited about the possibility of collaborating with you on a great project.
-            </p>
-            <p style="margin: 15px 0;">
-                Your message has been a wonderful encouragement, and I am eager to discuss how my skills and 
-                experience could contribute to your team's success. I have attached my CV for your reference, 
-                and I look forward to the opportunity to further discuss my qualifications and how I might be 
-                able to assist you.
-            </p>
-            <p style="margin: 15px 0;">
-                Thank you again for your time and consideration. I am available to chat at your convenience, 
-                and I look forward to the possibility of working together.
-            </p>
-            <p style="margin-top: 30px; font-weight: bold;">
-                Best regards,<br>Ramsés Ramírez Vallejo
-            </p>
-        </div>
-    </body>
-    </html>
-    `, recipientName)
 }

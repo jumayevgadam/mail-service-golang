@@ -21,7 +21,7 @@ func main() {
 	app := fiber.New()
 	// Setting up CORS middleware
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
+		AllowOrigins: []string{"http://127.0.0.1:80", "http://localhost:80", "http://localhost:3000", "http://127.0.0.1:3000"},
 		AllowMethods: []string{"POST"},
 		AllowHeaders: []string{"Origin", "Content-Type"},
 	}))
