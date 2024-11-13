@@ -9,5 +9,7 @@ import (
 // SetRoutes sets up routes for the application
 func SetRoutes(app *fiber.App) {
 	mailRoutes := app.Group("/api/mail")
+	mailRoutes.Post("/configure", handlers.ConfigureMailOps)
 	mailRoutes.Post("/send", handlers.SendMail, middleware.ValidatorMiddleware())
+	mailRoutes.Get("/get-config", handlers.GetMailConfig)
 }
